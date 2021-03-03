@@ -1,4 +1,5 @@
 import requests
+import math
 from bs4 import BeautifulSoup
 from Lesson import Lesson
 
@@ -18,7 +19,7 @@ def getSoup():
 		return soup
 
 
-
+#tries to return a lesson object, filled with the data from the parameter
 def tryRetrieveLesson(table):
 	soup = BeautifulSoup(str(table), 'html.parser')
 	rows = soup.table.find_all("tr")
@@ -27,7 +28,7 @@ def tryRetrieveLesson(table):
 		name = rows[0].td.font.b.text.strip()
 		docent = rows[1].td.font.b.text.strip()
 		place = rows[2].td.font.b.text.strip()
-	except AttributeError:
+	except:
 		return None
 
 	return Lesson(name, docent, place)
@@ -44,9 +45,21 @@ def getTables():
 
 
 def createGrid():
-	rows = getTables()
-	grid = [[]]
+	tables = getTables()
+	grid = [[0 for i in range(8)] for j in range(int(math.ceil(len(tables) / 8)))]
 
-	lesson = tryRetrieveLesson(rows[5])
-	if lesson is not None:
-		lesson.ShowData()
+	print(len(tables))
+	counter = 0
+
+	for i in range(int(math.ceil(len(tables) / 8))):
+
+		if i != math.ceil(len(tables) / 8) - 1:
+			for j in range(8):
+				grid[i][j] = tryRetrieveLesson(tables[counter])
+				counter += 1
+		else:
+			for j in range(len(tables) % 8):
+				grid[i][j] = tryRetrieveLesson(tables[counter])
+				counter += 1
+
+	print(grid)
