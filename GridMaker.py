@@ -8,8 +8,8 @@ from Lesson import Lesson
 #
 # 	response = requests.get(url)
 # 	soup = BeautifulSoup(response.content, 'html.parser')
-
-#	return soup.prettify()
+#
+# 	return soup
 
 
 def getSoup():
@@ -18,7 +18,19 @@ def getSoup():
 		return soup
 
 
-# def filter(soup):
+
+def tryRetrieveLesson(table):
+	soup = BeautifulSoup(str(table), 'html.parser')
+	rows = soup.table.find_all("tr")
+
+	try:
+		name = rows[0].td.font.b.text.strip()
+		docent = rows[1].td.font.b.text.strip()
+		place = rows[2].td.font.b.text.strip()
+	except AttributeError:
+		return None
+
+	return Lesson(name, docent, place)
 
 
 def getTables():
@@ -28,12 +40,13 @@ def getTables():
 	#each table, is one cell in the main table
 	tables = main_table.find_all("table")[6:]
 
-	for table in tables:
-		print(table, end="\n___\n")
-
 	return tables
 
 
 def createGrid():
 	rows = getTables()
 	grid = [[]]
+
+	lesson = tryRetrieveLesson(rows[5])
+	if lesson is not None:
+		lesson.ShowData()

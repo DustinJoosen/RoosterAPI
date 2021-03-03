@@ -7,3 +7,6 @@ class Lesson:
 		self.starttime = None
 		self.endtime = None
 		self.datum = None
+
+	def ShowData(self):
+		print(f"Name: {self.name}\nDocent: {self.docent}\nPlace: {self.place}")
