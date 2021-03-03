@@ -1,5 +1,5 @@
 class Lesson:
-	def __init__(self, name, docent, place):
+	def __init__(self, name, docent, place, rowspan=2):
 		self.name = name
 		self.docent = docent
 		self.place = place
@@ -8,5 +8,8 @@ class Lesson:
 		self.endtime = None
 		self.datum = None
 
+		self.rowspan = rowspan
+
 	def ShowData(self):
-		print(f"Name: {self.name}\nDocent: {self.docent}\nPlace: {self.place}")
+		print(f"You have {self.name} from {self.docent} in {self.place}")
+		print(f"On {self.datum} from {self.starttime} until {self.endtime}")
