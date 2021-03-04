@@ -1,10 +1,19 @@
 from LessonRetriever import LessonRetriever
+from flask import Flask, jsonify
+from Lesson import LessonEncoder
+import json
 
-#will be a flask page#
+app = Flask(__name__)
+app.config["SECRET_KEY"] = "PotatoHead"
 
-lessonRetriever = LessonRetriever()
-lessonlist = lessonRetriever.GetList()
 
-for lesson in lessonlist:
-	print(lesson.ShowData())
-	print("\n___")
+@app.route("/api/rooster/", methods=["GET"])
+def getAll():
+	lesson_retriever = LessonRetriever()
+	lesson_list = lesson_retriever.GetList()
+
+	return json.dumps(lesson_list, indent=4, cls=LessonEncoder)
+
+
+if __name__ == "__main__":
+	app.run()

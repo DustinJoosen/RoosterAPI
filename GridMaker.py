@@ -7,19 +7,13 @@ rowspans = {}
 
 
 # Will be used in later versions, but for now it is locally saved to keep a stable input
-# def getSoup():
-# 	url = "https://rooster.horizoncollege.nl/rstr/ECO/HRN/Roosters/09/c/c00046.htm"
-#
-# 	response = requests.get(url)
-# 	soup = BeautifulSoup(response.content, 'html.parser')
-#
-# 	return soup
-
-
 def getSoup():
-	with open("default.html", 'r') as file:
-		soup = BeautifulSoup(file.read(), 'html.parser')
-		return soup
+	url = "https://rooster.horizoncollege.nl/rstr/ECO/HRN/Roosters/09/c/c00051.htm"
+
+	response = requests.get(url)
+	soup = BeautifulSoup(response.content, 'html.parser')
+
+	return soup
 
 
 def getTables():
@@ -33,13 +27,13 @@ def getTables():
 
 
 #tries to return a lesson object, filled with the data from the parameter
-def tryRetrieveLesson(table):
+def tryRetrieveLesson(table, prev=None):
 	soup = BeautifulSoup(str(table), 'html.parser')
 	rows = soup.table.find_all("tr")
 
-	#Trying something out here
-	# main_soup = getSoup()
-	# p = main_soup.find(soup).parent
+	print("_______________")
+	print(prev)
+	print("_______________")
 
 	# print(p)
 
@@ -63,11 +57,11 @@ def createGrid():
 	for i in range(int(math.ceil(len(tables) / 8))):
 		if i != math.ceil(len(tables) / 8) - 1:
 			for j in range(8):
-				grid[i][j] = tryRetrieveLesson(tables[counter])
+				grid[i][j] = tryRetrieveLesson(tables[counter], tables[counter].previous_element)
 				counter += 1
 		else:
 			for j in range(len(tables) % 8):
-				grid[i][j] = tryRetrieveLesson(tables[counter])
+				grid[i][j] = tryRetrieveLesson(tables[counter], tables[counter].previous_element)
 				counter += 1
 
 	return grid
