@@ -2,13 +2,18 @@ import requests
 import math
 from bs4 import BeautifulSoup
 from Lesson import Lesson
+import datetime
 
+#These are wrong. Try to hardcode them and see what happens
 rowspans = {}
 
 
 # Will be used in later versions, but for now it is locally saved to keep a stable input
 def getSoup():
-	url = "https://rooster.horizoncollege.nl/rstr/ECO/HRN/Roosters/09/c/c00051.htm"
+	# weeknum = datetime.date.today().isocalendar()[1]
+	url = f"https://rooster.horizoncollege.nl/rstr/ECO/HRN/Roosters/09/c/c00038.htm"
+
+	print(url)
 
 	response = requests.get(url)
 	soup = BeautifulSoup(response.content, 'html.parser')
@@ -27,15 +32,18 @@ def getTables():
 
 
 #tries to return a lesson object, filled with the data from the parameter
-def tryRetrieveLesson(table, prev=None):
+def tryRetrieveLesson(table, prev, counter):
+	global rowspans
+
 	soup = BeautifulSoup(str(table), 'html.parser')
 	rows = soup.table.find_all("tr")
 
-	print("_______________")
-	print(prev)
-	print("_______________")
-
-	# print(p)
+	try:
+		rowspan = prev["rowspan"]
+		if int(rowspan) != int(2):
+			rowspans[counter] = rowspan
+	except KeyError as ex:
+		rowspan = 2
 
 	try:
 		docent = rows[0].td.font.b.text.strip()
@@ -45,23 +53,42 @@ def tryRetrieveLesson(table, prev=None):
 	except:
 		return None
 
-	return Lesson(name, docent, place)
+	return Lesson(name, docent, place, rowspan=rowspan)
+
+
+def insertRowspawns(grid):
+	global rowspans
+
+	counter = 0
+	for i in range(len(grid)):
+		for j in range(len(grid[i])):
+			if counter in rowspans:
+				grid[i+1][j] = grid[i][j]
+
+				del rowspans[counter]
+				for key, value in rowspans.items():
+					rowspans[key] = str(int(value) + 1)
+
+			counter += 1
+
+	return grid
 
 
 def createGrid():
 	tables = getTables()
-	grid = [[None for i in range(8)] for j in range(int(math.ceil(len(tables) / 8)))]
+	grid = [[None for i in range(8)] for j in range(int(math.ceil(len(tables) / 8)) + 1)]
 
 	counter = 0
 
 	for i in range(int(math.ceil(len(tables) / 8))):
 		if i != math.ceil(len(tables) / 8) - 1:
 			for j in range(8):
-				grid[i][j] = tryRetrieveLesson(tables[counter], tables[counter].previous_element)
+				grid[i][j] = tryRetrieveLesson(tables[counter], tables[counter].previous_element, counter)
 				counter += 1
 		else:
 			for j in range(len(tables) % 8):
-				grid[i][j] = tryRetrieveLesson(tables[counter], tables[counter].previous_element)
+				grid[i][j] = tryRetrieveLesson(tables[counter], tables[counter].previous_element, counter)
 				counter += 1
 
+	grid = insertRowspawns(grid)
 	return grid

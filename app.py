@@ -12,6 +12,11 @@ def getAll():
 	lesson_retriever = LessonRetriever()
 	lesson_list = lesson_retriever.GetList()
 
+	#There are 9 portfolio objects, but only 8 portfolio lessons!!!
+
+	#27
+	print(len(lesson_list))
+
 	return json.dumps(lesson_list, indent=4, cls=LessonEncoder)
 
 

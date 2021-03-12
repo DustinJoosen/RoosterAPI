@@ -28,4 +28,6 @@ class LessonRetriever:
 
 					lessonlist.append(grid[i][j])
 
+		#expected value: 27
+		print("lessonlist length: " + str(len(lessonlist)))
 		return lessonlist
