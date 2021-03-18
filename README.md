@@ -7,12 +7,10 @@ Will return a json list of all subjects.
 
 Todos:
     
-    -Fix the bug when a lesson is longer then 50 minutes(it causes the data to be invalid)
     -Have the rooster URL be automatically generated
-    -Clean up the JSON output(and remove the rowspan from the output)
     -Add method to check per day(/api/rooster/{day})
-    -Clean up the code, and unify GridMaker and LessonRetriever
-    
+    -have one object per double lesson, instead of two
+    -Let the data be returned as json, not string so that the browser auto-formats it
 
 
 v1.0
