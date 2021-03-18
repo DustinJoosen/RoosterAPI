@@ -8,15 +8,31 @@ class LessonRetriever:
 		self.soup = self.__GetSoup()
 
 		self.grid = [[None for _ in range(8)] for _ in range(15)]
-		self.tables = []
+		self.tables = None
 		self.lessons = []
 
 	def GetLessons(self):
-		self.__SetTables()
-		self.__SetRepeaters()
 		self.__CreateGrid()
 
+		#TODO: Make this generate automatically
+		dates = [None, None, "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", None]
+		start_times = ["08:30", "09:20", "10:25", "11:15", "12:05", "12:55", "13:45", "14:35", "15:40", "16:30",
+			"17:20", "18:10", "19:00", "19:50", "20:40"]
+		end_times = ["09:20", "10:10", "11:15", "12:05", "12:55", "13:45", "14:35", "15:25", "16:30", "17:20", "18:10",
+			"19:00", "19:50", "20:40", "21:30"]
+
+		for i in range(len(self.grid)):
+			for j in range(len(self.grid[i])):
+				if self.grid[i][j] is not None:
+					self.grid[i][j].SetDateTime(dates[j], start_times[i], end_times[i])
+					self.lessons.append(self.grid[i][j])
+
+		return self.lessons
+
 	def __CreateGrid(self):
+		if self.tables is None:
+			self.__SetTables()
+
 		counter = 0
 		for i in range(15):
 			for j in range(8):
@@ -48,9 +64,12 @@ class LessonRetriever:
 		#a table is a cell in the main table. the first 6 can be skipped, as they are the headers
 		self.tables = main_table.find_all("table")[6:]
 
+		#where there are double lessons, there are gaps. this method temporary fills those gaps.
+		self.__SetRepeaters()
+
 	@staticmethod
 	def __GetSoup():
-		url = f"https://rooster.horizoncollege.nl/rstr/ECO/HRN/Roosters/09/c/c00038.htm"
+		url = f"https://rooster.horizoncollege.nl/rstr/ECO/HRN/Roosters/11/c/c00052.htm"
 
 		response = requests.get(url)
 		soup = BeautifulSoup(response.content, 'html.parser')

@@ -1,4 +1,3 @@
-import json
 from json import JSONEncoder
 
 
@@ -8,13 +7,16 @@ class Lesson:
 		self.docent = docent
 		self.place = place
 
-		self.starttime = None
-		self.endtime = None
-		self.datum = None
+		self.when = None
 
-	def ShowData(self):
-		print(f"You have {self.name} from {self.docent} in {self.place}")
-		print(f"On {self.datum} from {self.starttime} until {self.endtime}")
+	def SetDateTime(self, date, starttime, endtime):
+		self.when = {
+			"day": date,
+			"time": {
+				"start": starttime,
+				"end": endtime
+			}
+		}
 
 
 class LessonEncoder(JSONEncoder):
