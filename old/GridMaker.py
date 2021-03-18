@@ -4,11 +4,20 @@ from bs4 import BeautifulSoup
 from Lesson import Lesson
 import datetime
 
-#These are wrong. Try to hardcode them and see what happens
-rowspans = {}
+rowspans = {
+	4: 4,
+	5: 4,
+	19: 4,
+	23: 4,
+	32: 4,
+	37: 4,
+	47: 4,
+	48: 4,
+	53: 4,
+	62: 4
+}
 
 
-# Will be used in later versions, but for now it is locally saved to keep a stable input
 def getSoup():
 	# weeknum = datetime.date.today().isocalendar()[1]
 	url = f"https://rooster.horizoncollege.nl/rstr/ECO/HRN/Roosters/09/c/c00038.htm"
@@ -41,7 +50,8 @@ def tryRetrieveLesson(table, prev, counter):
 	try:
 		rowspan = prev["rowspan"]
 		if int(rowspan) != int(2):
-			rowspans[counter] = rowspan
+			pass
+			# rowspans[counter] = rowspan
 	except KeyError as ex:
 		rowspan = 2
 
@@ -89,6 +99,8 @@ def createGrid():
 			for j in range(len(tables) % 8):
 				grid[i][j] = tryRetrieveLesson(tables[counter], tables[counter].previous_element, counter)
 				counter += 1
+
+	print(rowspans)
 
 	grid = insertRowspawns(grid)
 	return grid
