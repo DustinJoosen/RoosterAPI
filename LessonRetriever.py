@@ -1,5 +1,4 @@
 import requests
-import math
 from bs4 import BeautifulSoup
 from Lesson import Lesson
 
@@ -8,7 +7,7 @@ class LessonRetriever:
 	def __init__(self):
 		self.soup = self.__GetSoup()
 
-		self.grid = [[None for i in range(8)] for j in range(15)]
+		self.grid = [[None for _ in range(8)] for _ in range(15)]
 		self.tables = []
 		self.lessons = []
 
@@ -21,7 +20,11 @@ class LessonRetriever:
 		counter = 0
 		for i in range(15):
 			for j in range(8):
-				self.grid[i][j] = self.__TryRetrieveLesson(self.tables[counter])
+				retrieved_value = self.__TryRetrieveLesson(self.tables[counter])
+				if retrieved_value == "Repeater":
+					retrieved_value = self.__TryRetrieveLesson(self.tables[counter - 8])
+
+				self.grid[i][j] = retrieved_value
 				counter += 1
 
 	#Set a value at the double lessons, to prevent everything breaking
@@ -54,10 +57,11 @@ class LessonRetriever:
 
 		return soup
 
+	#Try to get a lesson object out of a table. when not a lesson, it returns None
 	@staticmethod
 	def __TryRetrieveLesson(table):
 		if table == "Repeater":
-			return "Insert repeater object here"
+			return "Repeater"
 
 		soup = BeautifulSoup(str(table), 'html.parser')
 		rows = soup.table.find_all("tr")
