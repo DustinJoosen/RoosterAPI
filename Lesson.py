@@ -3,7 +3,7 @@ from json import JSONEncoder
 
 
 class Lesson:
-	def __init__(self, name, docent, place, rowspan=2):
+	def __init__(self, name, docent, place):
 		self.name = name
 		self.docent = docent
 		self.place = place
@@ -11,8 +11,6 @@ class Lesson:
 		self.starttime = None
 		self.endtime = None
 		self.datum = None
-
-		self.rowspan = rowspan
 
 	def ShowData(self):
 		print(f"You have {self.name} from {self.docent} in {self.place}")

@@ -8,12 +8,21 @@ class LessonRetriever:
 	def __init__(self):
 		self.soup = self.__GetSoup()
 
+		self.grid = [[None for i in range(8)] for j in range(15)]
 		self.tables = []
 		self.lessons = []
 
 	def GetLessons(self):
 		self.__SetTables()
 		self.__SetRepeaters()
+		self.__CreateGrid()
+
+	def __CreateGrid(self):
+		counter = 0
+		for i in range(15):
+			for j in range(8):
+				self.grid[i][j] = self.__TryRetrieveLesson(self.tables[counter])
+				counter += 1
 
 	#Set a value at the double lessons, to prevent everything breaking
 	def __SetRepeaters(self):
@@ -44,3 +53,20 @@ class LessonRetriever:
 		soup = BeautifulSoup(response.content, 'html.parser')
 
 		return soup
+
+	@staticmethod
+	def __TryRetrieveLesson(table):
+		if table == "Repeater":
+			return "Insert repeater object here"
+
+		soup = BeautifulSoup(str(table), 'html.parser')
+		rows = soup.table.find_all("tr")
+
+		try:
+			docent = rows[0].td.font.b.text.strip()
+			name = rows[1].td.font.b.text.strip()
+			place = rows[2].td.font.b.text.strip()
+		except:
+			return None
+
+		return Lesson(name, docent, place)
