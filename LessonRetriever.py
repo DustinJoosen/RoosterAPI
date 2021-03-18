@@ -11,18 +11,22 @@ class LessonRetriever:
 		self.tables = []
 		self.lessons = []
 
-		self.rowspans = {}
-
-		self.dates = [None, None, "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday", None]
-		self.start_times = ["08:30", "09:20", "10:25", "11:15", "12:05", "12:55", "13:45", "14:35", "15:40", "16:30", "17:20", "18:10", "19:00", "19:50", "20:40"]
-		self.end_times = ["09:20", "10:10", "11:15", "12:05", "12:55", "13:45", "14:35", "15:25", "16:30", "17:20", "18:10", "19:00", "19:50", "20:40", "21:30"]
-
 	def GetLessons(self):
 		self.__SetTables()
-		self.__SetRowspans()
+		self.__SetRepeaters()
 
-	def __SetRowspans(self):
-		pass
+	#Set a value at the double lessons, to prevent everything breaking
+	def __SetRepeaters(self):
+		for i, table in enumerate(self.tables):
+			try:
+				parent = self.tables[i].previous_element
+				rowspan = int(parent["rowspan"])
+
+				#for the normal lessons, the rowspan is 2. otherwise it is 4
+				if rowspan != 2:
+					self.tables.insert(i + 8, "Repeater")
+			except:
+				pass
 
 	#Returns a list of tables.
 	def __SetTables(self):
