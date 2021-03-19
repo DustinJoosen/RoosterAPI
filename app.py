@@ -1,7 +1,6 @@
-from datetime import datetime
 from LessonRetriever import LessonRetriever
-from Lesson import LessonEncoder, Lesson
-from flask import Flask, request
+from Lesson import LessonEncoder
+from flask import Flask, request, current_app
 import json
 
 app = Flask(__name__)
@@ -26,8 +25,7 @@ def rooster():
 	if subject is not None:
 		lessons = [l for l in lessons if l.subject.lower() == subject.lower()]
 
-	return json.dumps(lessons, indent=4, cls=LessonEncoder)
-
+	return current_app.response_class(json.dumps(lessons, indent=4, cls=LessonEncoder), mimetype="application/json")
 
 if __name__ == "__main__":
 	app.run()
