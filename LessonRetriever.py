@@ -11,7 +11,7 @@ end_times = ["09:20", "10:10", "11:15", "12:05", "12:55", "13:45", "14:35", "15:
 
 class LessonRetriever:
 	#default for the weeknum, is the current weeknum
-	weeknum = datetime.isocalendar(datetime.today())[1]
+	weeknum = datetime.isocalendar(datetime.today())[1] - 1
 
 	def __init__(self):
 		self.soup = self.__GetSoup()
@@ -22,6 +22,7 @@ class LessonRetriever:
 		self.headers = []
 		self.lessons = []
 
+	#places all the items from the grid inside a list, and assigns dates and times
 	def GetLessons(self):
 		self.__CreateGrid()
 
@@ -33,6 +34,7 @@ class LessonRetriever:
 
 		return self.lessons
 
+	#this places the items in a multidimensional grid, making it possible to assign dates and times to it depending on the place
 	def __CreateGrid(self):
 		if self.tables is None:
 			self.__SetTables()
@@ -106,9 +108,12 @@ class LessonRetriever:
 
 		try:
 			docent = rows[0].td.font.b.text.strip()
-			name = rows[1].td.font.b.text.strip()
+			subject = rows[1].td.font.b.text.strip()
 			place = rows[2].td.font.b.text.strip()
+
+			if subject == "---":
+				raise Exception()
 		except:
 			return None
 
-		return Lesson(name, docent, place)
+		return Lesson(subject, docent, place)

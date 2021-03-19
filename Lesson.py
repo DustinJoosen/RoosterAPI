@@ -3,7 +3,7 @@ from json import JSONEncoder
 
 class Lesson:
 	def __init__(self, name, docent, place):
-		self.name = name
+		self.subject = name
 		self.docent = docent
 		self.place = place
 
