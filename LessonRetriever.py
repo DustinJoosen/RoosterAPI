@@ -1,9 +1,13 @@
 import requests
 from bs4 import BeautifulSoup
+from datetime import datetime
 from Lesson import Lesson
 
 
 class LessonRetriever:
+	#default for the weeknum, is the current weeknum
+	weeknum = datetime.isocalendar(datetime.today())[1]
+
 	def __init__(self):
 		self.soup = self.__GetSoup()
 
@@ -69,7 +73,7 @@ class LessonRetriever:
 
 	@staticmethod
 	def __GetSoup():
-		url = f"https://rooster.horizoncollege.nl/rstr/ECO/HRN/Roosters/11/c/c00052.htm"
+		url = f"https://rooster.horizoncollege.nl/rstr/ECO/HRN/Roosters/{LessonRetriever.weeknum}/c/c00052.htm"
 
 		response = requests.get(url)
 		soup = BeautifulSoup(response.content, 'html.parser')
