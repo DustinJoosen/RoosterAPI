@@ -3,6 +3,11 @@ from bs4 import BeautifulSoup
 from datetime import datetime
 from Lesson import Lesson
 
+start_times = ["08:30", "09:20", "10:25", "11:15", "12:05", "12:55", "13:45", "14:35", "15:40", "16:30",
+				"17:20", "18:10", "19:00", "19:50", "20:40"]
+end_times = ["09:20", "10:10", "11:15", "12:05", "12:55", "13:45", "14:35", "15:25", "16:30", "17:20",
+				"18:10", "19:00", "19:50", "20:40", "21:30"]
+
 
 class LessonRetriever:
 	#default for the weeknum, is the current weeknum
@@ -13,22 +18,17 @@ class LessonRetriever:
 
 		self.grid = [[None for _ in range(8)] for _ in range(15)]
 		self.tables = None
+
+		self.headers = []
 		self.lessons = []
 
 	def GetLessons(self):
 		self.__CreateGrid()
 
-		#TODO: Make this generate automatically
-		dates = [None, None, "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", None]
-		start_times = ["08:30", "09:20", "10:25", "11:15", "12:05", "12:55", "13:45", "14:35", "15:40", "16:30",
-			"17:20", "18:10", "19:00", "19:50", "20:40"]
-		end_times = ["09:20", "10:10", "11:15", "12:05", "12:55", "13:45", "14:35", "15:25", "16:30", "17:20", "18:10",
-			"19:00", "19:50", "20:40", "21:30"]
-
 		for i in range(len(self.grid)):
 			for j in range(len(self.grid[i])):
 				if self.grid[i][j] is not None:
-					self.grid[i][j].SetDateTime(dates[j], start_times[i], end_times[i])
+					self.grid[i][j].SetDateTime(self.headers[j - 2], start_times[i], end_times[i])
 					self.lessons.append(self.grid[i][j])
 
 		return self.lessons
@@ -65,8 +65,12 @@ class LessonRetriever:
 		#searches for a table with specific attributes. the only table that matches is the one needed
 		main_table = self.soup.find("table", {"border": 3, "rules": "all"})
 
-		#a table is a cell in the main table. the first 6 can be skipped, as they are the headers
-		self.tables = main_table.find_all("table")[6:]
+		#a table is a cell in the main table.
+		tables = main_table.find_all("table")
+		self.tables = tables[6:]
+
+		for header in tables[1:6]:
+			self.headers.append(self.__TryRetrieveHeader(header))
 
 		#where there are double lessons, there are gaps. this method temporary fills those gaps.
 		self.__SetRepeaters()
@@ -79,6 +83,17 @@ class LessonRetriever:
 		soup = BeautifulSoup(response.content, 'html.parser')
 
 		return soup
+
+	#Try to get a header text out of the header
+	@staticmethod
+	def __TryRetrieveHeader(header):
+		soup = BeautifulSoup(str(header), 'html.parser')
+
+		try:
+			header = soup.tr.td.font.b.text.strip()
+			return header
+		except:
+			return "Unknown"
 
 	#Try to get a lesson object out of a table. when not a lesson, it returns None
 	@staticmethod
