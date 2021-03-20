@@ -12,9 +12,11 @@ end_times = ["09:20", "10:10", "11:15", "12:05", "12:55", "13:45", "14:35", "15:
 class LessonRetriever:
 	#default for the weeknum, is the current weeknum
 	weeknum = datetime.isocalendar(datetime.today())[1]
+	classname = "H19AO-A"
 
 	def __init__(self):
-		self.soup = self.__GetSoup()
+		self.classId = self.__GetClassId(self.classname)
+		self.soup = self.__GetSoup(self.classId)
 
 		self.grid = [[None for _ in range(8)] for _ in range(15)]
 		self.tables = None
@@ -78,13 +80,38 @@ class LessonRetriever:
 		self.__SetRepeaters()
 
 	@staticmethod
-	def __GetSoup():
-		url = f"https://rooster.horizoncollege.nl/rstr/ECO/HRN/Roosters/{LessonRetriever.weeknum}/c/c00052.htm"
+	def __GetSoup(classId):
+		url = f"https://rooster.horizoncollege.nl/rstr/ECO/HRN/Roosters/{LessonRetriever.weeknum}/c/c{classId}.htm"
 
+		print(url)
 		response = requests.get(url)
 		soup = BeautifulSoup(response.content, 'html.parser')
 
 		return soup
+
+	@staticmethod
+	def __GetClassId(class_name):
+		url = "https://rooster.horizoncollege.nl/rstr/ECO/HRN/Roosters/frames/navbar.htm"
+
+		response = requests.get(url)
+		content = str(response.content)
+
+		#find the indexes where the classes array starts and ends
+		classes_starting_idx = content.find("var classes = [")
+		teachers_starting_idx = content.find("var teachers = [")
+
+		classes_js_array = content[classes_starting_idx:teachers_starting_idx]
+
+		#cut text away so that it can be made into a list
+		classes_js_array = classes_js_array.replace("var classes = [", '')
+		classes_js_array = classes_js_array.replace("];\\r\\n", '')
+		classes_js_array = classes_js_array.replace("\"", '')
+
+		classes_list = classes_js_array.split(",")
+
+		#need to add one because the array is zero-based, but the page id starts at 1
+		class_id = classes_list.index(class_name) + 1
+		return f"{str(100000 + class_id)[1:]}"
 
 	#Try to get a header text out of the header
 	@staticmethod
@@ -117,3 +144,4 @@ class LessonRetriever:
 			return None
 
 		return Lesson(subject, docent, place)
+
