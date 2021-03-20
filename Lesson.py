@@ -2,19 +2,19 @@ from json import JSONEncoder
 
 
 class Lesson:
-	def __init__(self, name, docent, place):
-		self.subject = name
+	def __init__(self, subject, docent, place):
+		self.vak = subject
 		self.docent = docent
-		self.place = place
+		self.plaats = place
 
-		self.when = None
+		self.wanneer = None
 
 	def SetDateTime(self, date, starttime, endtime):
-		self.when = {
-			"day": date,
-			"time": {
+		self.wanneer = {
+			"dag": date,
+			"tijd": {
 				"start": starttime,
-				"end": endtime
+				"eind": endtime
 			}
 		}
 
