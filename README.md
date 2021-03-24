@@ -48,3 +48,4 @@ Todos:
 	-Error handling
 	-CORS
 	-Change server from development to production
+	-Fix the rowspans als het meer dan 4 rijen is

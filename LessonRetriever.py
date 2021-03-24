@@ -13,14 +13,25 @@ class LessonRetriever:
 	#default for the weeknum, is the current weeknum
 	weeknum = datetime.isocalendar(datetime.today())[1]
 
-	#default values for the url. can be changed via url parameters
-	url_codes = {
-		"class": "H19AO-A",
-		"building": "HRN",
-		"sector": "ECO"
-	}
+	def __init__(self, weeknum, _class, building, sector):
+		self.url_codes = {"class": "H19AO-A", "building": "HRN", "sector": "ECO"}
 
-	def __init__(self):
+		try:
+			if _class is not None and isinstance(_class, str):
+				self.url_codes["class"] = _class
+
+			if building is not None and isinstance(building, str):
+				self.url_codes["building"] = building
+
+			if sector is not None and isinstance(sector, str):
+				self.url_codes["sector"] = sector
+
+			if weeknum is not None and isinstance(weeknum, str):
+				LessonRetriever.weeknum = int(weeknum)
+
+		except:
+			raise Exception("Een van de url parameters die is ingevoerd, is ongeldig")
+
 		self.classId = self.__GetClassId(self.url_codes)
 		self.soup = self.__GetSoup(self.classId, self.url_codes)
 
@@ -46,6 +57,9 @@ class LessonRetriever:
 	def __CreateGrid(self):
 		if self.tables is None:
 			self.__SetTables()
+
+		if len(self.tables) != 120:
+			raise Exception("Er ging iets mis met het ophalen van de lessen. Misschien is er een speciale les")
 
 		counter = 0
 		for i in range(15):
@@ -91,6 +105,9 @@ class LessonRetriever:
 				f"rstr/{codes['sector']}/{codes['building']}/Roosters/{LessonRetriever.weeknum}/c/c{classId}.htm"
 
 		response = requests.get(url)
+		if response.status_code != 200:
+			raise Exception("De url is ongeldig")
+
 		soup = BeautifulSoup(response.content, 'html.parser')
 
 		return soup
@@ -100,6 +117,9 @@ class LessonRetriever:
 		url = f"https://rooster.horizoncollege.nl/rstr/{codes['sector']}/{codes['building']}/Roosters/frames/navbar.htm"
 
 		response = requests.get(url)
+		if response.status_code != 200:
+			raise Exception("De url is ongeldig")
+
 		content = str(response.content)
 
 		#find the indexes where the classes array starts and ends
