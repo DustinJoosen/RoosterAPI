@@ -10,10 +10,10 @@ end_times = ["09:20", "10:10", "11:15", "12:05", "12:55", "13:45", "14:35", "15:
 
 
 class LessonRetriever:
-	#default for the weeknum, is the current weeknum
-	weeknum = datetime.isocalendar(datetime.today())[1]
-
 	def __init__(self, weeknum, _class, building, sector):
+		# default for the weeknum, is the current weeknum
+		self.weeknum = datetime.isocalendar(datetime.today())[1]
+
 		self.url_codes = {"class": "H19AO-A", "building": "HRN", "sector": "ECO"}
 
 		try:
@@ -27,13 +27,13 @@ class LessonRetriever:
 				self.url_codes["sector"] = sector
 
 			if weeknum is not None and isinstance(weeknum, str):
-				LessonRetriever.weeknum = int(weeknum)
+				self.weeknum = int(weeknum)
 
 		except:
 			raise Exception("Een van de url parameters die is ingevoerd, is ongeldig")
 
 		self.classId = self.__GetClassId(self.url_codes)
-		self.soup = self.__GetSoup(self.classId, self.url_codes)
+		self.soup = self.__GetSoup(self.classId, self.weeknum, self.url_codes)
 
 		self.grid = [[None for _ in range(8)] for _ in range(15)]
 		self.tables = None
@@ -100,9 +100,9 @@ class LessonRetriever:
 		self.__SetRepeaters()
 
 	@staticmethod
-	def __GetSoup(classId, codes):
+	def __GetSoup(classId, weeknum, codes):
 		url = "https://rooster.horizoncollege.nl/" \
-				f"rstr/{codes['sector']}/{codes['building']}/Roosters/{LessonRetriever.weeknum}/c/c{classId}.htm"
+				f"rstr/{codes['sector']}/{codes['building']}/Roosters/{weeknum}/c/c{classId}.htm"
 
 		response = requests.get(url)
 		if response.status_code != 200:
@@ -170,4 +170,3 @@ class LessonRetriever:
 			return None
 
 		return Lesson(subject, docent, place)
-
