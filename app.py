@@ -13,9 +13,17 @@ def rooster():
 	if weeknum is not None:
 		LessonRetriever.weeknum = int(weeknum)
 
-	classname = request.args.get('klas')
-	if classname is not None:
-		LessonRetriever.classname = str(classname)
+	classcode = request.args.get('klas')
+	if classcode is not None:
+		LessonRetriever.url_codes["class"] = str(classcode)
+
+	sectorcode = request.args.get('sector')
+	if sectorcode is not None:
+		LessonRetriever.url_codes["sector"] = str(sectorcode)
+
+	buildingcode = request.args.get('gebouw')
+	if buildingcode is not None:
+		LessonRetriever.url_codes["building"] = str(buildingcode)
 
 	lesson_retriever = LessonRetriever()
 	lessons = lesson_retriever.GetLessons()
@@ -29,6 +37,14 @@ def rooster():
 	subject = request.args.get('vak')
 	if subject is not None:
 		lessons = [l for l in lessons if l.vak.lower() == subject.lower()]
+
+	docent = request.args.get("docent")
+	if docent is not None:
+		lessons = [l for l in lessons if l.docent.lower() == docent.lower()]
+
+	place = request.args.get("plaats")
+	if place is not None:
+		lessons = [l for l in lessons if l.plaats.lower() == place.lower()]
 
 	return current_app.response_class(json.dumps(lessons, indent=4, cls=LessonEncoder), mimetype="application/json")
 
