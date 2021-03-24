@@ -45,7 +45,7 @@ hiermee geef je aan uit welk gebouw de vakken worden laten zien. de standaard wa
 
 
 Todos:
-	-Error handling
+	-Error handling(soms krijg je een error, soms niet)
 	-CORS
 	-Change server from development to production
 	-Fix the rowspans als het meer dan 4 rijen is

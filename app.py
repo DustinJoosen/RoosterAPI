@@ -1,6 +1,7 @@
 from LessonRetriever import LessonRetriever
 from Lesson import LessonEncoder
 from flask import Flask, request, current_app, redirect, jsonify
+from datetime import datetime
 import json
 
 app = Flask(__name__)
@@ -10,6 +11,28 @@ app.config["SECRET_KEY"] = "Potato_Umbrella"
 @app.errorhandler(404)
 def _404(e):
 	return redirect("/api/rooster/")
+
+
+@app.route('/api/rooster/tomorrow', methods=["GET"])
+def tomorrow():
+	try:
+		classcode = request.args.get('klas')
+		buildingcode = request.args.get('gebouw')
+		sectorcode = request.args.get('sector')
+
+		lesson_retriever = LessonRetriever(None, classcode, buildingcode, sectorcode)
+		lessons = lesson_retriever.GetLessons()
+
+		tomorrow_idx = datetime.today().weekday() + 1
+
+		days_of_week = ["Maandag", "Dinsdag", "Woensdag", "Donderdag", "Vrijdag"]
+		lessons = [l for l in lessons if l.wanneer["dag"][:4].lower() == days_of_week[tomorrow_idx][:4].lower()]
+
+		json_obj = json.dumps(lessons, indent=4, cls=LessonEncoder)
+		return current_app.response_class(json_obj, mimetype="application/json"), 200
+
+	except Exception as ex:
+		return jsonify({"error_message": str(ex)}), 400
 
 
 @app.route('/api/rooster/', methods=["GET"])
@@ -46,7 +69,8 @@ def rooster():
 		if place is not None:
 			lessons = [l for l in lessons if l.plaats.lower() == place.lower()]
 
-		return current_app.response_class(json.dumps(lessons, indent=4, cls=LessonEncoder), mimetype="application/json")
+		json_obj = json.dumps(lessons, indent=4, cls=LessonEncoder)
+		return current_app.response_class(json_obj, mimetype="application/json"), 200
 
 	except Exception as ex:
 		return jsonify({"error_message": str(ex)}), 400
