@@ -4,6 +4,9 @@ RoosterAPI is een A.P.I. for het rooster van het horizoncollege.
 https://horizon-rooster.herokuapp.com/api/rooster
 neemt GET requests aan, en retourneerd een lijst van 'lesson' objecten waar alle informatie in staat.
 
+https://horizon-rooster.herokuapp.com/api/rooster/tomorrow
+neemt doet precies hetzelfde als de de vorige, maar geeft alle lessen van de volgende dag. Alleen de klas, sector en gebouw kunnen worden gespecificeerd in de url.
+
 
 Url parameters
 
@@ -45,7 +48,6 @@ hiermee geef je aan uit welk gebouw de vakken worden laten zien. de standaard wa
 
 
 Todos:
-	-Error handling(soms krijg je een error, soms niet)
 	-CORS
 	-Change server from development to production
 	-Fix the rowspans als het meer dan 4 rijen is

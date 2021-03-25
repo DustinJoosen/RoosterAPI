@@ -22,3 +22,7 @@ class Lesson:
 class LessonEncoder(JSONEncoder):
 	def default(self, o):
 		return o.__dict__
+
+
+class ClientException(Exception):
+	pass

@@ -1,7 +1,7 @@
 import requests
 from bs4 import BeautifulSoup
 from datetime import datetime
-from Lesson import Lesson
+from CustomObjects import Lesson, ClientException
 
 start_times = ["08:30", "09:20", "10:25", "11:15", "12:05", "12:55", "13:45", "14:35", "15:40", "16:30",
 				"17:20", "18:10", "19:00", "19:50", "20:40"]
@@ -14,6 +14,7 @@ class LessonRetriever:
 		# default for the weeknum, is the current weeknum
 		self.weeknum = datetime.isocalendar(datetime.today())[1]
 
+		#default values for if there are no matching url parameters
 		self.url_codes = {"class": "H19AO-A", "building": "HRN", "sector": "ECO"}
 
 		try:
@@ -30,7 +31,7 @@ class LessonRetriever:
 				self.weeknum = int(weeknum)
 
 		except:
-			raise Exception("Een van de url parameters die is ingevoerd, is ongeldig")
+			raise ClientException("Een van de url parameters die is ingevoerd, is ongeldig")
 
 		self.classId = self.__GetClassId(self.url_codes)
 		self.soup = self.__GetSoup(self.classId, self.weeknum, self.url_codes)
@@ -59,7 +60,7 @@ class LessonRetriever:
 			self.__SetTables()
 
 		if len(self.tables) != 120:
-			raise Exception("Er ging iets mis met het ophalen van de lessen. Misschien is er een speciale les")
+			raise ClientException("Er ging iets mis met het ophalen van de lessen. Misschien is er een speciale les")
 
 		counter = 0
 		for i in range(15):
@@ -79,8 +80,12 @@ class LessonRetriever:
 				rowspan = int(parent["rowspan"])
 
 				#for the normal lessons, the rowspan is 2. otherwise it is 4
-				if rowspan != 2:
+				if rowspan == 4:
 					self.tables.insert(i + 8, "Repeater")
+				elif rowspan == 2:
+					pass
+				else:
+					print("Big row. will probaly cause errors")
 			except:
 				pass
 
@@ -99,6 +104,7 @@ class LessonRetriever:
 		#where there are double lessons, there are gaps. this method temporary fills those gaps.
 		self.__SetRepeaters()
 
+	#returns a beautifulsoup to work with the page contents
 	@staticmethod
 	def __GetSoup(classId, weeknum, codes):
 		url = "https://rooster.horizoncollege.nl/" \
@@ -106,19 +112,20 @@ class LessonRetriever:
 
 		response = requests.get(url)
 		if response.status_code != 200:
-			raise Exception("De url is ongeldig")
+			raise ClientException("De url is ongeldig")
 
 		soup = BeautifulSoup(response.content, 'html.parser')
 
 		return soup
 
+	#handles a bit of javascript code to retrieve the classId. the classId is the index ins the classes array + 1
 	@staticmethod
 	def __GetClassId(codes):
 		url = f"https://rooster.horizoncollege.nl/rstr/{codes['sector']}/{codes['building']}/Roosters/frames/navbar.htm"
 
 		response = requests.get(url)
 		if response.status_code != 200:
-			raise Exception("De url is ongeldig")
+			raise ClientException("De url is ongeldig")
 
 		content = str(response.content)
 
@@ -126,6 +133,7 @@ class LessonRetriever:
 		classes_starting_idx = content.find("var classes = [")
 		teachers_starting_idx = content.find("var teachers = [")
 
+		#get the javascript classes array
 		classes_js_array = content[classes_starting_idx:teachers_starting_idx]
 
 		#cut text away so that it can be made into a list

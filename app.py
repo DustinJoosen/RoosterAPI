@@ -1,5 +1,5 @@
 from LessonRetriever import LessonRetriever
-from Lesson import LessonEncoder
+from CustomObjects import LessonEncoder, ClientException
 from flask import Flask, request, current_app, redirect, jsonify
 from datetime import datetime
 import json
@@ -48,11 +48,10 @@ def rooster():
 		lessons.sort(key=lambda x: x.wanneer["dag"])
 
 		#filters
-
 		dayofweek = request.args.get('dag_van_week')
 		if dayofweek is not None:
 			if int(dayofweek) > 4:
-				raise Exception("Bij dag_van_week wordt er een waarde verwacht tussen 0(maandag) en vrijdag(4)")
+				raise ClientException("Bij dag_van_week wordt er een waarde verwacht tussen 0(maandag) en vrijdag(4)")
 
 			days_of_week = ["Maandag", "Dinsdag", "Woensdag", "Donderdag", "Vrijdag"]
 			lessons = [l for l in lessons if l.wanneer["dag"][:4].lower() == days_of_week[int(dayofweek)][:4].lower()]
@@ -72,8 +71,10 @@ def rooster():
 		json_obj = json.dumps(lessons, indent=4, cls=LessonEncoder)
 		return current_app.response_class(json_obj, mimetype="application/json"), 200
 
+	except ClientException as cex:
+		return jsonify({"error_message": str(cex)}), 400
 	except Exception as ex:
-		return jsonify({"error_message": str(ex)}), 400
+		return None, 500
 
 
 if __name__ == "__main__":
