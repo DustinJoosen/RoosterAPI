@@ -3,9 +3,17 @@ from CustomObjects import LessonEncoder, ClientException
 from flask import Flask, request, current_app, redirect, jsonify
 from datetime import datetime
 import json
+# from flask_cors import CORS
 
 app = Flask(__name__)
 app.config["SECRET_KEY"] = "Potato_Umbrella"
+
+# CORS(app)
+# cors = CORS(app, resources={
+# 	r"/*": {
+# 		"origins": "*"
+# 	}
+# })
 
 
 @app.errorhandler(404)
@@ -74,7 +82,7 @@ def rooster():
 	except ClientException as cex:
 		return jsonify({"error_message": str(cex)}), 400
 	except Exception as ex:
-		return None, 500
+		return ex, 500
 
 
 if __name__ == "__main__":

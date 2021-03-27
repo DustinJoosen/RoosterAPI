@@ -80,12 +80,12 @@ class LessonRetriever:
 				rowspan = int(parent["rowspan"])
 
 				#for the normal lessons, the rowspan is 2. otherwise it is 4
-				if rowspan == 4:
-					self.tables.insert(i + 8, "Repeater")
-				elif rowspan == 2:
-					pass
-				else:
-					print("Big row. will probaly cause errors")
+				if rowspan != 2:
+					amount_of_lessons = int((rowspan - 2) / 2)
+
+					for j in range(1, amount_of_lessons+1):
+						self.tables.insert(i + (8 * j), "Repeater")
+
 			except:
 				pass
 
