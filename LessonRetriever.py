@@ -48,7 +48,7 @@ class LessonRetriever:
 
 		for i in range(len(self.grid)):
 			for j in range(len(self.grid[i])):
-				if self.grid[i][j] is not None:
+				if type(self.grid[i][j]) == Lesson:
 					self.grid[i][j].SetDateTime(self.headers[j - 2], start_times[i], end_times[i])
 					self.lessons.append(self.grid[i][j])
 
@@ -65,9 +65,10 @@ class LessonRetriever:
 		counter = 0
 		for i in range(15):
 			for j in range(8):
-				retrieved_value = self.__TryRetrieveLesson(self.tables[counter])
-				if retrieved_value == "Repeater":
+				if self.tables[counter] == "Repeater":
 					retrieved_value = self.__TryRetrieveLesson(self.tables[counter - 8])
+				else:
+					retrieved_value = self.__TryRetrieveLesson(self.tables[counter])
 
 				self.grid[i][j] = retrieved_value
 				counter += 1
@@ -83,8 +84,9 @@ class LessonRetriever:
 				if rowspan != 2:
 					amount_of_lessons = int((rowspan - 2) / 2)
 
-					for j in range(1, amount_of_lessons+1):
-						self.tables.insert(i + (8 * j), "Repeater")
+					for j in range(amount_of_lessons):
+						x = ((j + 1) * 8)
+						self.tables.insert(x + i, "Repeater")
 
 			except:
 				pass

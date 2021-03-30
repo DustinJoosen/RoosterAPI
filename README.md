@@ -48,6 +48,6 @@ hiermee geef je aan uit welk gebouw de vakken worden laten zien. de standaard wa
 
 
 Todos:
-	-CORS
+
+	-CORS werkt niet goed
 	-Change server from development to production
-	-Fix the rowspans als het meer dan 4 rijen is

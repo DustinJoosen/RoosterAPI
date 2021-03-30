@@ -82,7 +82,7 @@ def rooster():
 	except ClientException as cex:
 		return jsonify({"error_message": str(cex)}), 400
 	except Exception as ex:
-		return ex, 500
+		return str(ex), 500
 
 
 if __name__ == "__main__":
