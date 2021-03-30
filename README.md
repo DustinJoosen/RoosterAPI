@@ -7,6 +7,9 @@ neemt GET requests aan, en retourneerd een lijst van 'lesson' objecten waar alle
 https://horizon-rooster.herokuapp.com/api/rooster/tomorrow
 neemt doet precies hetzelfde als de de vorige, maar geeft alle lessen van de volgende dag. Alleen de klas, sector en gebouw kunnen worden gespecificeerd in de url.
 
+https://horizon-rooster.herokuapp.com/api/rooster/today
+neemt doet precies hetzelfde als de de vorige, maar geeft alle lessen van vandaag. Alleen de klas, sector en gebouw kunnen worden gespecificeerd in de url.
+
 
 Url parameters
 
@@ -51,3 +54,4 @@ Todos:
 
 	-CORS werkt niet goed
 	-Change server from development to production
+	-Clean up this readme
