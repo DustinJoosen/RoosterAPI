@@ -10,6 +10,10 @@ end_times = ["09:20", "10:10", "11:15", "12:05", "12:55", "13:45", "14:35", "15:
 
 
 class LessonRetriever:
+
+	COLUMNS = 6
+	ROWS = 15
+
 	def __init__(self, weeknum, _class, building, sector):
 		# default for the weeknum, is the current weeknum
 		self.weeknum = datetime.isocalendar(datetime.today())[1]
@@ -36,7 +40,7 @@ class LessonRetriever:
 		self.classId = self.__GetClassId(self.url_codes)
 		self.soup = self.__GetSoup(self.classId, self.weeknum, self.url_codes)
 
-		self.grid = [[None for _ in range(8)] for _ in range(15)]
+		self.grid = [[None for _ in range(self.COLUMNS)] for _ in range(self.ROWS)]
 		self.tables = None
 
 		self.headers = []
@@ -49,7 +53,7 @@ class LessonRetriever:
 		for i in range(len(self.grid)):
 			for j in range(len(self.grid[i])):
 				if type(self.grid[i][j]) == Lesson:
-					self.grid[i][j].SetDateTime(self.headers[j - 2], start_times[i], end_times[i])
+					self.grid[i][j].SetDateTime(self.headers[j - 1], start_times[i], end_times[i])
 					self.lessons.append(self.grid[i][j])
 
 		return self.lessons
@@ -59,14 +63,14 @@ class LessonRetriever:
 		if self.tables is None:
 			self.__SetTables()
 
-		if len(self.tables) != 120:
+		if len(self.tables) != (self.COLUMNS * self.ROWS):
 			raise ClientException("Er ging iets mis met het ophalen van de lessen. Misschien is er een speciale les")
 
 		counter = 0
-		for i in range(15):
-			for j in range(8):
+		for i in range(self.ROWS):
+			for j in range(self.COLUMNS):
 				if self.tables[counter] == "Repeater":
-					retrieved_value = self.__TryRetrieveLesson(self.tables[counter - 8])
+					retrieved_value = self.__TryRetrieveLesson(self.tables[counter - self.COLUMNS])
 				else:
 					retrieved_value = self.__TryRetrieveLesson(self.tables[counter])
 
@@ -85,7 +89,7 @@ class LessonRetriever:
 					amount_of_lessons = int((rowspan - 2) / 2)
 
 					for j in range(amount_of_lessons):
-						x = ((j + 1) * 8)
+						x = ((j + 1) * self.COLUMNS)
 						self.tables.insert(x + i, "Repeater")
 
 			except:
