@@ -11,7 +11,7 @@ end_times = ["09:20", "10:10", "11:15", "12:05", "12:55", "13:45", "14:35", "15:
 
 class LessonRetriever:
 
-	COLUMNS = 6
+	COLUMNS = 8
 	ROWS = 15
 
 	def __init__(self, weeknum, _class, building, sector):
@@ -53,7 +53,7 @@ class LessonRetriever:
 		for i in range(len(self.grid)):
 			for j in range(len(self.grid[i])):
 				if type(self.grid[i][j]) == Lesson:
-					self.grid[i][j].SetDateTime(self.headers[j - 1], start_times[i], end_times[i])
+					self.grid[i][j].SetDateTime(self.headers[j - 2], start_times[i], end_times[i])
 					self.lessons.append(self.grid[i][j])
 
 		return self.lessons
