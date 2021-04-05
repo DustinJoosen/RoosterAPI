@@ -1,14 +1,14 @@
-#RoosterAPI
-#####RoosterAPI is een A.P.I. for het rooster van het horizoncollege.
+# RoosterAPI
+##### RoosterAPI is een A.P.I. for het rooster van het horizoncollege.
 
-#####Deze A.P.I. Kan worden gebruikt om GET requesten te sturen voor een lijst met objecten, waar informatie in staat over het rooster. De A.P.I. wordt gehost met heroku, op de volgende url:
-#####*https://horizon-rooster.herokuapp.com/api/rooster/*
+##### Deze A.P.I. Kan worden gebruikt om GET requesten te sturen voor een lijst met objecten, waar informatie in staat over het rooster. De A.P.I. wordt gehost met heroku, op de volgende url:
+##### *https://horizon-rooster.herokuapp.com/api/rooster/*
 
-##Url parameters
+## Url parameters
 
 de url parameters en filters kunnen worden gebruikt met elkaar. voorbeeld: /api/rooster?week_nummer=13&plaats=C207
 
-###Url varianten
+### Url varianten
 
 *https://horizon-rooster.herokuapp.com/api/rooster*
 is de standaard url, en geeft een lijst met alle lessen van de huidige week.
@@ -20,7 +20,7 @@ geeft een lijst terug met alle lessen van morgen. Er kunnen geen filters worden 
 geeft een lijst terug met alle lessen van vandaag. Er kunnen geen filters worden gebruikt.
 
 
-###Url parameters(worden gebruikt om het juiste rooster te vinden)
+### Url parameters(worden gebruikt om het juiste rooster te vinden)
 
 *https://horizon-rooster.herokuapp.com/api/rooster?sector=ECO*
 hiermee geef je aan uit welk sector, het rooster wordt opgehaald. De standaard waarde is ECO
@@ -36,7 +36,7 @@ hiermee geef je aan van welke week het rooster wordt opgehaald. De standaard waa
 
 
 
-###Url filters(worden gebruikt om aan te geven welke data wordt teruggegeven)
+### Url filters(worden gebruikt om aan te geven welke data wordt teruggegeven)
 
 
 
@@ -56,10 +56,10 @@ specificeerd welke dag van de week je ziet. zero-based.(maandag=0, dinsdag=1 etc
 
 
 
-##Todos:
+## Todos:
 
-	-CORS werkt niet goed
-	-Change server from development to production
+	-CORS werkt niet. JS en ajax kunnen geen requesten maken
+	-Implement a Virtual Enviroment
 
 
 

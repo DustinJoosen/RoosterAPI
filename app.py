@@ -2,18 +2,13 @@ from LessonRetriever import LessonRetriever
 from CustomObjects import LessonEncoder, ClientException
 from flask import Flask, request, current_app, redirect, jsonify
 from datetime import datetime
+from flask_cors import CORS, cross_origin
 import json
-# from flask_cors import CORS
 
 app = Flask(__name__)
 app.config["SECRET_KEY"] = "Potato_Umbrella"
-
-# CORS(app)
-# cors = CORS(app, resources={
-# 	r"/*": {
-# 		"origins": "*"
-# 	}
-# })
+cors = CORS(app, resources={r"/foo": {"origins": "*"}})
+app.config['CORS_HEADERS'] = 'Content-Type'
 
 
 @app.errorhandler(404)
@@ -22,6 +17,7 @@ def _404(e):
 
 
 @app.route('/api/rooster/<date>', methods=["GET"])
+@cross_origin(origin='*', headers=['Content-Type', 'Authorization'])
 def tomorrow(date):
 	if date not in ["tomorrow", "today"]:
 		return redirect("/api/rooster/")
@@ -51,6 +47,7 @@ def tomorrow(date):
 
 
 @app.route('/api/rooster/', methods=["GET"])
+@cross_origin(origin='*',headers=['Content-Type','Authorization'])
 def rooster():
 	try:
 		weeknum = request.args.get('week_nummer')
