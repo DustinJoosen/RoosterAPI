@@ -61,12 +61,22 @@ class LessonRetriever:
 		return self.lessons
 
 	#this places the items in a multidimensional grid, making it possible to assign dates and times to it depending on the place
-	def __CreateGrid(self):
+	def __CreateGrid(self, first=True):
 		if self.tables is None:
 			self.__SetTables()
 
 		if len(self.tables) != (self.COLUMNS * self.ROWS):
-			raise ClientException("Er ging iets mis met het ophalen van de lessen. Misschien is er een speciale les")
+			if self.COLUMNS == 6:
+				self.COLUMNS = 8
+			elif self.COLUMNS == 8:
+				self.COLUMNS = 6
+
+			if first:
+				self.__CreateGrid(False)
+				return
+			else:
+
+				raise ClientException("Er ging iets mis met het ophalen van de lessen. Misschien is er een speciale les")
 
 		counter = 0
 		for i in range(self.ROWS):
