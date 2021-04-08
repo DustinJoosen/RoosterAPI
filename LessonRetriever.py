@@ -11,7 +11,7 @@ end_times = ["09:20", "10:10", "11:15", "12:05", "12:55", "13:45", "14:35", "15:
 
 class LessonRetriever:
 
-	COLUMNS = 6
+	COLUMNS = 8
 	ROWS = 15
 
 	def __init__(self, weeknum, _class, building, sector):

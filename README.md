@@ -56,10 +56,4 @@ specificeerd welke dag van de week je ziet. zero-based.(maandag=0, dinsdag=1 etc
 
 
 
-## Todos:
-
-	-CORS werkt niet. JS en ajax kunnen geen requesten maken
-
-
-
-Gemaakt door Dustin Joosen. 
+Gemaakt door Dustin Joosen
