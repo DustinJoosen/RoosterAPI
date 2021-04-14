@@ -46,24 +46,23 @@ class LessonRetriever:
 		self.headers = []
 		self.lessons = []
 
-		self.header_subtraction = 2 if self.COLUMNS == 8 else 1
-
 	#places all the items from the grid inside a list, and assigns dates and times
 	def GetLessons(self):
 		self.__CreateGrid()
 
+		header_subtraction = 2 if self.COLUMNS == 8 else 1
+
 		for i in range(len(self.grid)):
 			for j in range(len(self.grid[i])):
 				if type(self.grid[i][j]) == Lesson:
-					self.grid[i][j].SetDateTime(self.headers[j - self.header_subtraction], start_times[i], end_times[i])
+					self.grid[i][j].SetDateTime(self.headers[j - header_subtraction], start_times[i], end_times[i])
 					self.lessons.append(self.grid[i][j])
 
 		return self.lessons
 
 	#this places the items in a multidimensional grid, making it possible to assign dates and times to it depending on the place
 	def __CreateGrid(self, first=True):
-		if self.tables is None:
-			self.__SetTables()
+		self.__SetTables()
 
 		if len(self.tables) != (self.COLUMNS * self.ROWS):
 			if self.COLUMNS == 6:
