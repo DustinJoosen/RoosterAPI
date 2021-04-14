@@ -1,6 +1,6 @@
 from LessonRetriever import LessonRetriever
 from CustomObjects import LessonEncoder, ClientException
-from flask import Flask, request, current_app, redirect, jsonify
+from flask import Flask, request, current_app, redirect, jsonify, render_template
 from datetime import datetime
 from flask_cors import CORS, cross_origin
 import json
@@ -14,6 +14,11 @@ app.config['CORS_HEADERS'] = 'Content-Type'
 @app.errorhandler(404)
 def _404(e):
 	return redirect("/api/rooster/")
+
+
+@app.route('/docs')
+def documentation():
+	return render_template('docs.html')
 
 
 @app.route('/api/rooster/<date>', methods=["GET"])

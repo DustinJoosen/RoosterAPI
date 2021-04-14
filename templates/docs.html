@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="du">
+<head>
+	<meta name="author" content="Dustin Joosen">
+	<meta name="description" content="Documentation for my Rooster API">
+	<style>
+	.colored_box{
+		padding:5px;
+		background-color: lightgray;
+		margin-right:40px;
+		margin-bottom: 10px;
+		border-radius: 10px;
+		overflow-x: auto;
+	}
+
+	#json_example{
+		background-color: rgb(240, 240, 240);
+		width:30%;
+		border-radius: 10px;
+	}
+
+	#contact_box{
+		padding: 10px;
+	}
+	</style>
+	<title>RoosterAPI Documentation</title>
+</head>
+<body>
+
+<h1>RoosterAPI</h1>
+
+<p>RoosterAPI is een A.P.I. (application programming interface) voor het rooster van het horizon college.<br/>
+Deze A.P.I. Kan worden gebruikt om een GET request te sturen voor een lijst met objecten, waar de informatie van de vakken in staan.</p>
+<p>De A.P.I. wordt gehost met heroku, op de volgende url: <a href="https://horizon-rooster.herokuapp.com/api/rooster/">https://horizon-rooster.herokuapp.com/api/rooster/</a></p>
+
+<div class="colored_box">
+	<h2>Output</h2>
+	<p>De output van de A.P.I. is een lijst met JSON objecten. Deze objecten hebben allemaal dezelfde opbouw, maar andere informatie. Hieronder is een voorbeeld</p>
+
+	<code>
+	<pre id="json_example">
+
+	{
+		"vak": "ENG",
+		"docent": "WEELD0",
+		"plaats": "online",
+		"wanneer": {
+			"dag": "Dinsdag 13-04",
+			"tijd": {
+				"start": "09:20",
+				"eind": "10:10"
+			}
+		}
+	}
+
+	</pre>
+	</code>
+	<sup>*Het 'plaats' kan ook het lokaalnummer bevatten.</sup>
+</div>
+<div class="colored_box">
+	<h2>Input</h2>
+	<p>De url heeft een aantal variaties waarmee kan worden gespecificeerd welke lessen worden opgehaald.</p>
+	<p>De volgende urls worden aangenomen:</p>
+	<ul style="list-style-type: circle">
+		<li><a href="https://horizon-rooster.herokuapp.com/api/rooster">https://horizon-rooster.herokuapp.com/api/rooster/</a></li>
+		<li><a href="https://horizon-rooster.herokuapp.com/api/rooster/today">https://horizon-rooster.herokuapp.com/api/rooster/today</a></li>
+		<li><a href="https://horizon-rooster.herokuapp.com/api/rooster/tomorrow">https://horizon-rooster.herokuapp.com/api/rooster/tomorrow</a></li>
+	</ul>
+	<p>De /today en /tomorrow geven alleen de lessen weer die vandaag of morgen te zien zijn.<br/>Echter zijn er meer opties. Via URL Queries kan er meer worden gespecifeerd. Deze queries kunnen worden verdeelt in 2 soorten: Filters(laten je bijvoorbeeld een specifiek vak kiezen) en Url kiezers(helpend om te bepalen welk rooster wordt gebruikt).</p>
+	<p>De url queries kunnen natuurlijk ook worden gecombineerd, bijvoorbeeld ?week_nummer=16&vak=PORTF
+	<div>
+		<h3>Url Kiezers</h3>
+		<ul>
+			<li>
+				<div>
+					<a href="https://horizon-rooster.herokuapp.com/api/rooster?sector=ECO">?sector=ECO</a>
+					<p>Je kan specificeren uit welke sector het rooster wordt opgehaald. De standaard waarde is ECO</p>
+				</div>
+			</li>
+			<li>
+				<div>
+					<a href="https://horizon-rooster.herokuapp.com/api/rooster?gebouw=HRN">?gebouw=HRN</a>
+					<p>Je kan specificeren uit welk gebouw het rooster wordt opgehaald. De standaard waarde is HRN(hoorn)</p>
+				</div>
+			</li>
+			<li>
+				<div>
+					<a href="https://horizon-rooster.herokuapp.com/api/rooster?klas=H19AO-A">?klas=H19AO-A</a>
+					<p>Je kan specificeren uit welke klas het rooster wordt opgehaald. De standaard waarde is H19AO-A. Om te bepalen wat je hier moet invullen, kijk je op de <a href="https://rooster.horizoncollege.nl/rstr/ECO/HRN/Roosters/">originele site</a>, en vul je in wat er in het 'Element' vak staat.</p>
+				</div>
+			</li>
+			<li>
+				<div>
+					<a href="https://horizon-rooster.herokuapp.com/api/rooster?week_nummer=15">?week_nummer=15</a>
+					<p>Je kan specificeren van welke week het rooster wordt opgehaald. De standaard waarde is de huidige week.<br/>Dit kan niet oneindig ver terug of vooruit. Meestal kan er 1 week terug en 2 weken vooruit gegaan worden, maar dit staat niet vast.</p>
+				</div>
+			</li>
+		</ul>
+	</div>
+
+	<div>
+		<h3>Filters</h3>
+		<p>De filters veranderen niet wat voor data wordt opgehaald, alleen welke data wordt teruggegeven. Dit kan niet worden gebruikt bij /tomorrow en /today<br/>(tenzij daar vraag naar is, in dat geval neem gerust contact op)</p>
+
+		<ul>
+			<li>
+				<div>
+					<a href="https://horizon-rooster.herokuapp.com/api/rooster?vak=PORTF">?vak=PORTF</a>
+					<p>filtert het vak. alleen de lessen van dit vak worden laten zien</p>
+				</div>
+			</li>
+			<li>
+				<div>
+					<a href="https://horizon-rooster.herokuapp.com/api/rooster?docent=KERCK0">?docent=KERKCK0</a>
+					<p>filtert de docent. alleen de lessen van deze docent worden laten zien</p>
+				</div>
+			</li>
+			<li>
+				<div>
+					<a href="https://horizon-rooster.herokuapp.com/api/rooster?plaats=C207">?plaats=C207</a>
+					<p>filtert het lokaal. alleen de lessen op de plaats worden laten zien</p>
+				</div>
+			</li>
+			<li>
+				<div>
+					<a href="https://horizon-rooster.herokuapp.com/api/rooster?dag_van_week=2">?dag_van_week=2</a>
+					<p>filtert de dag van de week. alleen de lessen op deze dag worden laten zien. Dit is zero-based.(maandag=0, dinsdag=1 etc.)</p>
+				</div>
+			</li>
+		</ul>
+	</div>
+
+</div>
+<div class="colored_box" id="contact_box">
+	<h2>Contact</h2>
+	<p>Email address: dustinjoosen2003@gmail.com<br/>
+	Deze site is gemaakt door Dustin Joosen. 2021</p>
+</div>
+
+</body>
+</html>
