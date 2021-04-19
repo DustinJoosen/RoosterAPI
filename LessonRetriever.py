@@ -74,7 +74,6 @@ class LessonRetriever:
 				self.__CreateGrid(False)
 				return
 			else:
-
 				raise ClientException("Er ging iets mis met het ophalen van de lessen. Misschien is er een speciale les")
 
 		counter = 0

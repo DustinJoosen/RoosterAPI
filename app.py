@@ -16,6 +16,7 @@ def _404(e):
 	return redirect("/api/rooster/")
 
 
+@app.route('/')
 @app.route('/docs')
 def documentation():
 	return render_template('docs.html')
