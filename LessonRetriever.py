@@ -12,7 +12,7 @@ end_times = ["09:20", "10:10", "11:15", "12:05", "12:55", "13:45", "14:35", "15:
 class LessonRetriever:
 
 	COLUMNS = 8
-	ROWS = 15
+	ROWS = 10
 
 	def __init__(self, weeknum, _class, building, sector):
 		# default for the weeknum, is the current weeknum
