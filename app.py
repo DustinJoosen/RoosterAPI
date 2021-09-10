@@ -37,7 +37,6 @@ def rooster():
 
 		lesson_retriever = LessonRetriever(url)
 		lessons = lesson_retriever.GetLessons()
-		lessons.sort(key=lambda x: x.wanneer["dag"])
 
 		# filters
 		dayofweek = request.args.get('dag_van_week')

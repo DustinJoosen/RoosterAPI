@@ -6,7 +6,7 @@ import requests
 class UrlGenerator:
 	def __init__(self, weeknum, classcode, buildingcode, sectorcode):
 		self.weeknum = datetime.isocalendar(datetime.today())[1]
-		self.classcode = "H19AO-A"
+		self.classcode = "HEITO19AO-A"
 		self.buildingcode = "HRN"
 		self.sectorcode = "ECO"
 

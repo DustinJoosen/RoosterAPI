@@ -13,12 +13,6 @@ de url parameters en filters kunnen worden gebruikt met elkaar. voorbeeld: /api/
 *https://horizon-rooster.herokuapp.com/api/rooster*
 is de standaard url, en geeft een lijst met alle lessen van de huidige week.
 
-*https://horizon-rooster.herokuapp.com/api/rooster/tomorrow*
-geeft een lijst terug met alle lessen van morgen. Er kunnen geen filters worden gebruikt.
-
-*https://horizon-rooster.herokuapp.com/api/rooster/today*
-geeft een lijst terug met alle lessen van vandaag. Er kunnen geen filters worden gebruikt.
-
 
 ### Url parameters(worden gebruikt om het juiste rooster te vinden)
 
